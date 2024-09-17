@@ -4,7 +4,7 @@ from PIL import Image
 import os
 
 # Test with all args
-# python3 ./src/lab_1.py ./images/song.png --new_width 500 --new_height 500 --output_dir ./images/ --old_color 237 125 67 --new_color 0 236 50 --red_balance 1.5 --green_balance 0.8 --blue_balance 1.2 --format JPEG
+# python3 ./src/lab_1.py ./images/song.png ./images/town.png --new_width 500 --new_height 500 --output_dir ./images/ --old_color 237 125 67 --new_color 0 236 50 --red_balance 1.5 --green_balance 0.8 --blue_balance 1.2 --format JPEG
 
 Color = Tuple[int, int, int]
 

@@ -6,10 +6,6 @@ pkgs.mkShell {
   buildInputs = [
     (
       pkgs.python3.withPackages (ps: [ 
-        # ps.pip
-        ps.numpy 
-        ps.matplotlib 
-        ps.scikit-image
         ps.pillow
       ])
     )
