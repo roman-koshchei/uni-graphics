@@ -10,6 +10,7 @@ pkgs.mkShell {
         ps.numpy 
         ps.matplotlib 
         ps.scikit-image
+        ps.pillow
       ])
     )
   ];
