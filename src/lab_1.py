@@ -27,7 +27,7 @@ def change_color(img: Image.Image, old_color: Color, new_color: Color):
   img.putdata(new_data)
   return img
 
-def balance_color(red: float = 1.0, green: float = 1.0, blue: float = 1.0):
+def balance_color(red: float = 1.0, green: float = 1.0, blue: float = 1.0) -> Image.Image:
   r, g, b = img.split()
   r = r.point(lambda i: i * red)
   g = g.point(lambda i: i * green)
@@ -46,6 +46,7 @@ if __name__ == "__main__":
   
   parser.add_argument("--new_width", type=int, help="New width for the image.")
   parser.add_argument("--new_height", type=int, help="New height for the image.")
+  parser.add_argument("--scale", type=float, help="Scale image.")
 
   parser.add_argument("--old_color", type=int, nargs=3, help="Old color to replace (RGB format).")
   parser.add_argument("--new_color", type=int, nargs=3, help="New color to apply (RGB format).")
@@ -73,4 +74,10 @@ if __name__ == "__main__":
       img = change_color(img, old_color, new_color)
 
     img = balance_color(args.red_balance, args.green_balance, args.blue_balance)
+
+    if(args.scale):
+      new_width = round(img.width * args.scale)
+      new_height = round(img.height * args.scale)
+      img = resize(img, new_width, new_height)
+
     convert_and_save(img, img_path, args.output_dir, args.format)
