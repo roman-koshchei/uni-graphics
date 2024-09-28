@@ -43,7 +43,11 @@ def balance_color(
 
 def convert_and_save(img: Image.Image, img_path: str, output_dir: str, format: str):
     img.save(
-        output_dir + os.path.splitext(os.path.basename(img_path))[0] + ".jpg", format
+        output_dir
+        + os.path.splitext(os.path.basename(img_path))[0]
+        + "."
+        + format.lower(),
+        format,
     )
 
 
