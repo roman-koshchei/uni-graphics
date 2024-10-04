@@ -1,21 +1,62 @@
 import argparse
-from typing import List, Tuple
+from typing import List, Callable
 from PIL import Image, ImageEnhance, ImageDraw
 import os
 
 
-# python3 ./src/lab_2.py ./images/town.jpg --opacity 0.2 --crop 1000 50 3000 1500 --contrast 1.5 --rows 2 --cols 2 --cutout 1500 100 2200 1300
+# python3 ./src/lab_2_refactor.py ./images/town.jpg --opacity 0.2 --crop 1000 50 3000 1500 --contrast 1.5 --rows 2 --cols 2 --cutout 1500 100 2200 1300
+
+ImageMutation = Callable[[Image.Image], Image.Image]
 
 
-def opacity(img: Image.Image, value: float) -> Image.Image:
-    opacity = round(value * 255)
-    if not (0 <= opacity <= 255):
+def opacity(value: float) -> ImageMutation:
+    def mutation(img: Image.Image):
+        opacity = round(value * 255)
+        if not (0 <= opacity <= 255):
+            return img
+
+        img.putalpha(opacity)
         return img
 
-    img.putalpha(opacity)
-    return img
+    return mutation
 
 
+def contrast(factor: float) -> ImageMutation:
+    def mutation(img: Image.Image):
+        enhancer = ImageEnhance.Contrast(img)
+        return enhancer.enhance(factor)
+
+    return mutation
+
+
+def crop(left: int, right: int, top: int, bottom: int) -> ImageMutation:
+    def mutation(img: Image.Image):
+        return img.crop((left, top, right, bottom))
+    return mutation
+
+
+def cutout(left: int, right: int, top: int, bottom: int) -> ImageMutation:
+    def mutation(img: Image.Image):
+        data = img.getdata()
+
+        new_data = []
+        for y in range(img.height):
+            for x in range(img.width):
+                index = y * img.width + x
+                r, g, b, a = data[index]
+
+                if left <= x < right and top <= y < bottom:
+                    new_data.append((r, g, b, 0))
+                else:
+                    new_data.append((r, g, b, a))
+
+        img.putdata(new_data)
+        return img
+
+    return mutation
+
+
+# not an image mutation, because returns many images
 def split(img: Image.Image, cols: int, rows: int) -> List[Image.Image]:
     tile_width = img.width // cols
     tile_height = img.height // rows
@@ -39,35 +80,6 @@ def split(img: Image.Image, cols: int, rows: int) -> List[Image.Image]:
             cropped_images.append(cropped_image)
 
     return cropped_images
-
-
-def crop(img: Image.Image, left: int, right: int, top: int, bottom: int) -> Image.Image:
-    return img.crop((left, top, right, bottom))
-
-
-def cutout(
-    img: Image.Image, left: int, right: int, top: int, bottom: int
-) -> Image.Image:
-    data = img.getdata()
-
-    new_data = []
-    for y in range(img.height):
-        for x in range(img.width):
-            index = y * img.width + x
-            r, g, b, a = data[index]
-
-            if left <= x < right and top <= y < bottom:
-                new_data.append((r, g, b, 0))
-            else:
-                new_data.append((r, g, b, a))
-
-    img.putdata(new_data)
-    return img
-
-
-def contrast(img: Image.Image, factor: float) -> Image.Image:
-    enhancer = ImageEnhance.Contrast(img)
-    return enhancer.enhance(factor)
 
 
 def filename(path: str):
@@ -122,23 +134,27 @@ def main():
     )
 
     args = parser.parse_args()
+    mutations_pipeline: List[ImageMutation] = []
+
+    if args.opacity is not None:
+        mutations_pipeline.append(opacity(args.opacity))
+
+    if args.contrast is not None:
+        mutations_pipeline.append(contrast(args.contrast))
+
+    if args.cutout is not None:
+        left, upper, right, lower = args.cutout
+        mutations_pipeline.append(cutout(left, right, upper, lower))
+
+    if args.crop is not None:
+        left, upper, right, lower = args.crop
+        mutations_pipeline.append(crop(left, right, upper, lower))
+
     for img_path in args.imgs_paths:
         img = Image.open(img_path).convert("RGBA")
 
-        if args.opacity is not None:
-            img = opacity(img, args.opacity)
-
-        # Apply contrast adjustment if specified
-        if args.contrast is not None:
-            img = contrast(img, args.contrast)
-
-        if args.cutout is not None:
-            left, upper, right, lower = args.cutout
-            img = cutout(img, left, right, upper, lower)
-
-        if args.crop is not None:
-            left, upper, right, lower = args.crop
-            img = crop(img, left, right, upper, lower)
+        for mutation in mutations_pipeline:
+            img = mutation(img)
 
         if args.rows is not None or args.cols is not None:
             rows = args.rows if args.rows is not None else 1
