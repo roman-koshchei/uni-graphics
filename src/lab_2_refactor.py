@@ -32,6 +32,7 @@ def contrast(factor: float) -> ImageMutation:
 def crop(left: int, right: int, top: int, bottom: int) -> ImageMutation:
     def mutation(img: Image.Image):
         return img.crop((left, top, right, bottom))
+
     return mutation
 
 

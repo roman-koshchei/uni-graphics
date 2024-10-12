@@ -8,6 +8,7 @@ pkgs.mkShell {
       pkgs.python3.withPackages (ps: [ 
         ps.pillow
         ps.black
+        ps.tkinter
       ])
     )
   ];
