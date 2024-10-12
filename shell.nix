@@ -5,10 +5,12 @@ pkgs.mkShell {
 
   buildInputs = [
     (
-      pkgs.python3.withPackages (ps: [ 
+      pkgs.python3.withPackages (ps: [
         ps.pillow
         ps.black
         ps.tkinter
+        ps.matplotlib
+        ps.numpy
       ])
     )
   ];
