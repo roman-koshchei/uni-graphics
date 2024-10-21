@@ -16,6 +16,7 @@ def plot_img(img: Image.Image, title: str | None = None):
 def calc_brightness(r: int, g: int, b: int) -> int:
     return round(0.3 * r + 0.59 * g + 0.11 * b)
 
+
 def pixel_brightness(pixel: tuple[int, int, int]):
     return calc_brightness(pixel[0], pixel[1], pixel[2])
 
@@ -59,7 +60,8 @@ def display_brightness_matrix(image: Image.Image):
     ]
 
     for row in brightness_matrix:
-        print(' '.join(f'{value:5.1f}' for value in row))
+        print(" ".join(f"{value:5.1f}" for value in row))
+
 
 def main():
     img = Image.open("./images/song.jpg").convert("RGB")
