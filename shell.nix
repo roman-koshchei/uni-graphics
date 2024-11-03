@@ -11,6 +11,8 @@ pkgs.mkShell {
         ps.tkinter
         ps.matplotlib
         ps.numpy
+        ps.scipy
+        ps.opencv4
       ])
     )
   ];

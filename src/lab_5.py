@@ -18,7 +18,9 @@ def sigma_filter(image: Image.Image, window_size=3, sigma=200):
         for i in range(offset, pixels.shape[0] - offset):
             for j in range(offset, pixels.shape[1] - offset):
                 # taking window
-                window = pixels[i - offset:i + offset + 1, j - offset:j + offset + 1, channel]
+                window = pixels[
+                    i - offset : i + offset + 1, j - offset : j + offset + 1, channel
+                ]
                 center_pixel = pixels[i, j, channel]
 
                 # determine which pixels has difference with center <= sigma
