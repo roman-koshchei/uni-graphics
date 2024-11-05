@@ -103,13 +103,13 @@ def main():
         add_coordinate_dependent_noise(image_array, base_variance=60),
     ]
 
-    # for index, noisy_image in enumerate(noisy_images):
-    #     if index == 0:
-    #         continue
+    filtered_images = apply_filters(noisy_images[1])
+    for index, image in enumerate(filtered_images):
+        if index == 0:
+            continue
 
-    #     Image.fromarray(noisy_image).save(f"./images/lab-6/pigs-{index}.bmp")
+        Image.fromarray(image).save(f"./images/lab-6/pigs-filtered-{index}.bmp")
 
-    filtered_images = apply_filters(image_array)
 
     for i, noisy_image in enumerate(noisy_images):
         filtered_images = apply_filters(noisy_image)
