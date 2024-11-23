@@ -1,6 +1,5 @@
 from typing import List
-from PIL import Image, ImageOps
-import matplotlib.pyplot as plt
+from PIL import Image
 import numpy as np
 import cv2
 from scipy.ndimage import gaussian_filter, median_filter, generic_filter
@@ -8,7 +7,6 @@ from scipy.ndimage import gaussian_filter, median_filter, generic_filter
 # python3 ./src/lab_6.py
 
 ImageArray = np.ndarray
-
 
 def add_additive_noise(image: ImageArray, variance: float) -> ImageArray:
     noise = np.random.normal(0, variance**0.5, image.shape)

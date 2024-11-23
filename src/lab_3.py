@@ -1,10 +1,4 @@
-import argparse
-from datetime import datetime
-from typing import List, Tuple
-from PIL import Image, ImageFont, ImageDraw, ImageTk
-from helpers import save_img, filename
-import tkinter as tk
-import threading
+
 
 # python3 ./src/lab_3.py ./images/town.jpg ./images/song.jpg
 

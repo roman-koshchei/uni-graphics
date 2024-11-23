@@ -1,4 +1,4 @@
-from PIL import Image, ImageOps
+from PIL import Image
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -53,7 +53,7 @@ def main():
     # plot_img(sigma_filter(img, sigma=20))
     # plot_img(sigma_filter(img, sigma=200))
     # plot_img(sigma_filter(img, sigma=400))
-    plot_img(sigma_filter(img, window_size=12, sigma=80))
+    plot_img(sigma_filter(img, window_size=12, sigma=100))
 
     plt.show()
 
